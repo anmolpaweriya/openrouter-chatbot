@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  krivisio-db-service:
+    image: ajayshakya786/krivisio-db-service:latest
+    ports:
+      - '3000:3000'
+    restart: unless-stopped
+    environment:
+      POSTGRES_CONNECTION_STRING: 'postgresql://dev_user:dev_password@localhost:5432/dev_db'
+      PORT: 3000
+      X_SECRET: 'secret'
+      # Add any environment variables your app needs here
+      # e.g. NODE_ENV: production

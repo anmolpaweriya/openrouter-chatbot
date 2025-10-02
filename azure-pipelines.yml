@@ -1,0 +1,55 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  DOCKER_USERNAME: 'ajayshakya786'
+  DOCKER_PASSWORD: 'dckr_pat_rEAi_2ap-N_6EGkD9bbiEa0N4vE'
+  DOCKERHUB_REPO: 'krivisio-db-service'
+  COMPOSE_DIR: '/home/ubuntu/db-service' # path on VM to docker-compose.yml
+
+stages:
+  - stage: BuildAndPush
+    displayName: Build & Push Docker Image
+    jobs:
+      - job: CI
+        displayName: Build and Push to Docker Hub
+        steps:
+          - script: |
+              echo "Logging into Docker Hub..."
+              echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            displayName: 'Login to Docker Hub'
+
+          - script: |
+              echo "Building Docker image..."
+              docker build -t $DOCKER_USERNAME/$DOCKERHUB_REPO:latest .
+            displayName: 'Build Docker Image'
+
+          - script: |
+              echo "Pushing Docker image to Docker Hub..."
+              docker push $DOCKER_USERNAME/$DOCKERHUB_REPO:latest
+            displayName: 'Push Docker Image to Docker Hub'
+
+  - stage: RestartOnVM
+    displayName: Restart Docker Compose on VM
+    dependsOn: BuildAndPush
+    condition: succeeded()
+    jobs:
+      - job: CD
+        displayName: SSH to VM and restart Docker Compose
+        steps:
+          - task: DownloadSecureFile@1
+            name: sshKey
+            inputs:
+              secureFile: 'azure_vm_id_rsa' # exact name of the secure file uploaded
+            displayName: 'Download SSH Private Key'
+
+          - script: |
+              chmod 600 $(sshKey.secureFilePath)
+              echo "Connecting to VM and restarting Docker Compose..."
+              ssh -o StrictHostKeyChecking=no -i $(sshKey.secureFilePath) ubuntu@20.193.156.147 "cd $COMPOSE_DIR && restart-docker-compose"
+            displayName: 'SSH into VM and restart Docker Compose'

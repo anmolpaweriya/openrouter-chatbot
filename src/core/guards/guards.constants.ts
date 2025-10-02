@@ -1,0 +1,1 @@
+export const EXTERNAL_CALL_NOT_ALLOWED = "External calls are not permitted on this API"
