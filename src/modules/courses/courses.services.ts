@@ -108,6 +108,9 @@ export class CourseService {
   }
 
   // --- Timetable ---
+  //
+
+  async setCompleteTimetableForSubject(subjectId: string) {}
   async createTimetable(data: CreateTimetableDto) {
     return this.timetableModel.create(data);
   }

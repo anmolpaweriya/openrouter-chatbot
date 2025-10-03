@@ -16,6 +16,7 @@ export class FacultyModel extends Model<
   declare name: string;
   declare phone: string;
   declare email: string;
+  declare designation: string;
 
   static setup(sequelize: Sequelize) {
     FacultyModel.init(
@@ -37,6 +38,10 @@ export class FacultyModel extends Model<
           type: DataTypes.STRING,
           allowNull: false,
           unique: true,
+        },
+        designation: {
+          type: DataTypes.STRING,
+          allowNull: true,
         },
       },
       {
