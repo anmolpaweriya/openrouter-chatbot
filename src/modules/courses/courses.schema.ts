@@ -59,6 +59,7 @@ export class SubjectModel extends Model<
 > {
   declare id: CreationOptional<string>;
   declare name: string;
+  declare teacherId: string;
   declare courseId: string;
   declare readonly createdAt?: Date;
   declare readonly updatedAt?: Date;
@@ -76,6 +77,10 @@ export class SubjectModel extends Model<
           allowNull: false,
         },
         courseId: {
+          type: DataTypes.UUID,
+          allowNull: false,
+        },
+        teacherId: {
           type: DataTypes.UUID,
           allowNull: false,
         },
@@ -103,6 +108,15 @@ export class SubjectModel extends Model<
 /* ==========================
    Timetable Model
 ========================== */
+// Define a Day enum
+export enum Weekday {
+  Monday = 'Monday',
+  Tuesday = 'Tuesday',
+  Wednesday = 'Wednesday',
+  Thursday = 'Thursday',
+  Friday = 'Friday',
+}
+
 export class TimetableModel extends Model<
   InferAttributes<TimetableModel>,
   InferCreationAttributes<TimetableModel>
@@ -110,8 +124,9 @@ export class TimetableModel extends Model<
   declare id: CreationOptional<string>;
   declare courseId: string;
   declare subjectId: string;
-  declare day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
-  declare timeSlot: string; // e.g., '09:00', '10:00', etc.
+  declare day: Weekday;
+  declare startTime: string; // Plain string like '09:00'
+  declare endTime: string; // Plain string like '10:30'
 
   static setup(sequelize: Sequelize) {
     TimetableModel.init(
@@ -130,18 +145,16 @@ export class TimetableModel extends Model<
           allowNull: false,
         },
         day: {
-          type: DataTypes.ENUM(
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-          ),
+          type: DataTypes.ENUM(...Object.values(Weekday)),
           allowNull: false,
         },
-        timeSlot: {
+        startTime: {
           type: DataTypes.STRING,
-          allowNull: false, // Format '09:00', '10:00', ...
+          allowNull: false,
+        },
+        endTime: {
+          type: DataTypes.STRING,
+          allowNull: false,
         },
       },
       {
@@ -157,8 +170,7 @@ export class TimetableModel extends Model<
 
   static associate(models: SqlModelsType) {
     TimetableModel.belongsTo(models.SubjectModel, {
-      // Should be TimetableModel, not SubjectModel
-      foreignKey: 'subjectId', // Use subjectId foreign key
+      foreignKey: 'subjectId',
       as: 'subject',
     });
     TimetableModel.belongsTo(models.CoursesModel, {

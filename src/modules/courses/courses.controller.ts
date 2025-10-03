@@ -9,6 +9,7 @@ import {
   Query,
   ValidationPipe,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { EducationService } from './courses.services';
@@ -21,8 +22,10 @@ import {
   UpdateTimetableDto,
   IdQueryDto,
 } from './courses.dto';
+import { UserGuard } from 'src/core/guards/guards';
 
 @ApiTags('education')
+@UseGuards(UserGuard)
 @Controller('education')
 export class EducationController {
   constructor(private readonly educationService: EducationService) {}

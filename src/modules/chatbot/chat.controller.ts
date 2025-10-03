@@ -9,16 +9,14 @@ import {
   Query,
   Res,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import {
-  ChatIdDto,
-  ChatRequestDto,
-  CreateChatSessionDto,
-  UserIdDto,
-} from './chat.dto';
+import { ChatIdDto, ChatRequestDto, CreateChatSessionDto } from './chat.dto';
 import { RequestDto } from 'src/core/dtos/request.dto';
+import { UserGuard } from 'src/core/guards/guards';
 
+@UseGuards(UserGuard)
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}

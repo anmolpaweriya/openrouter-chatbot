@@ -39,13 +39,3 @@ export class ChatIdDto {
   @IsString()
   chatId: string;
 }
-
-export class UserIdDto {
-  @ApiProperty({
-    description: 'The chat session ID to fetch history for',
-    example: 'chat-12345-session',
-  })
-  @IsNotEmpty()
-  @IsString()
-  userId: string;
-}

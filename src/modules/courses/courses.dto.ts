@@ -1,6 +1,8 @@
 // src/dtos/education.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsUUID, IsString, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsInt, Min } from 'class-validator';
+import { Weekday } from './courses.schema';
+import { Max } from 'sequelize-typescript';
 
 export class CreateCourseDto {
   @IsString()
@@ -24,9 +26,13 @@ export class CreateSubjectDto {
   @ApiProperty({ example: 'Data Structures' })
   name: string;
 
-  @IsUUID()
+  @IsString()
   @ApiProperty({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' })
   courseId: string;
+
+  @IsString()
+  @ApiProperty({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' })
+  teacherId: string;
 }
 
 export class UpdateSubjectDto {
@@ -36,59 +42,68 @@ export class UpdateSubjectDto {
   name?: string;
 
   @IsOptional()
-  @IsUUID()
+  @IsString()
   @ApiPropertyOptional({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' })
   courseId?: string;
 }
 
 export class CreateTimetableDto {
-  @IsUUID()
+  @IsString()
   @ApiProperty({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' })
   courseId: string;
 
-  @IsUUID()
+  @IsString()
   @ApiProperty({ example: '2fa85f64-5717-4562-b3fc-2c963f66afa7' })
   subjectId: string;
 
-  @IsEnum(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'])
-  @ApiProperty({
-    example: 'Monday',
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-  })
-  day: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
+  @IsEnum(Weekday)
+  @ApiProperty({ example: Weekday.Monday, enum: Weekday })
+  day: Weekday;
 
   @IsString()
-  @ApiProperty({ example: '09:00' })
-  timeSlot: string;
+  @ApiProperty({ example: '09:00', description: 'Start time in HH:mm format' })
+  startTime: string;
+
+  @IsString()
+  @ApiProperty({ example: '10:30', description: 'End time in HH:mm format' })
+  endTime: string;
 }
 
 export class UpdateTimetableDto {
   @IsOptional()
-  @IsUUID()
+  @IsString()
   @ApiPropertyOptional({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' })
   courseId?: string;
 
   @IsOptional()
-  @IsUUID()
+  @IsString()
   @ApiPropertyOptional({ example: '2fa85f64-5717-4562-b3fc-2c963f66afa7' })
   subjectId?: string;
 
   @IsOptional()
-  @IsEnum(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'])
-  @ApiPropertyOptional({
-    example: 'Friday',
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-  })
-  day?: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
+  @IsEnum(Weekday)
+  @ApiPropertyOptional({ example: Weekday.Friday, enum: Weekday })
+  day?: Weekday;
 
   @IsOptional()
   @IsString()
-  @ApiPropertyOptional({ example: '10:30' })
-  timeSlot?: string;
+  @ApiPropertyOptional({
+    example: '10:00',
+    description: 'Start time in HH:mm format',
+  })
+  startTime?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({
+    example: '11:30',
+    description: 'End time in HH:mm format',
+  })
+  endTime?: string;
 }
 
 export class IdQueryDto {
-  @IsUUID()
+  @IsString()
   @ApiProperty({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' })
   id: string;
 }
