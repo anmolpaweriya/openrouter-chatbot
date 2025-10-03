@@ -102,6 +102,12 @@ export class SubjectModel extends Model<
       foreignKey: 'courseId', // Correct foreign key
       as: 'course',
     });
+
+    SubjectModel.belongsTo(models.FacultyModel, {
+      // Use correct model name
+      foreignKey: 'teacherId', // Correct foreign key
+      as: 'teacher',
+    });
   }
 }
 

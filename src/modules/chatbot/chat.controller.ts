@@ -10,6 +10,7 @@ import {
   Res,
   Req,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { ChatIdDto, ChatRequestDto, CreateChatSessionDto } from './chat.dto';
@@ -42,5 +43,10 @@ export class ChatController {
   @Get('/rooms')
   async getChatHistory(@Req() res: RequestDto) {
     return await this.chatService.getChatHistory(res.userId);
+  }
+
+  @Delete('/rooms')
+  async deleteChatHistory(@Query() query: ChatIdDto) {
+    return await this.chatService.deleteChatHistory(query.chatId);
   }
 }

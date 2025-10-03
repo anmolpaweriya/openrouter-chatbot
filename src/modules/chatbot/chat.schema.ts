@@ -52,6 +52,7 @@ export class ChatHistoryModel extends Model<
     ChatHistoryModel.hasMany(models.ChatMessageModel, {
       foreignKey: 'chatId',
       as: 'messages',
+      onDelete: 'CASCADE',
     });
   }
 }
@@ -103,6 +104,7 @@ export class ChatMessageModel extends Model<
     ChatMessageModel.belongsTo(models.ChatHistoryModel, {
       foreignKey: 'chatId',
       as: 'chat',
+      onDelete: 'CASCADE',
     });
   }
 }

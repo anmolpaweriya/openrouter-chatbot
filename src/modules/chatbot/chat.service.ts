@@ -86,4 +86,8 @@ export class ChatService {
       order: [['createdAt', 'DESC']],
     });
   }
+
+  async deleteChatHistory(id: string) {
+    return this.ChatHistoryModel.destroy({ where: { id } });
+  }
 }
