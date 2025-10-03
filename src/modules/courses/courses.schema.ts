@@ -53,6 +53,53 @@ export class CourseModel extends Model<
   }
 }
 
+export class UserCoursesModel extends Model<
+  InferAttributes<UserCoursesModel>,
+  InferCreationAttributes<UserCoursesModel>
+> {
+  declare id: CreationOptional<string>;
+  declare userId: string;
+  declare courseId: string;
+  declare readonly createdAt?: Date;
+  declare readonly updatedAt?: Date;
+
+  static setup(sequelize: Sequelize) {
+    UserCoursesModel.init(
+      {
+        id: {
+          type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
+          primaryKey: true,
+        },
+        userId: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        courseId: {
+          type: DataTypes.UUID,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: 'userCourses',
+        modelName: 'UserCoursesModel',
+        timestamps: true,
+      },
+    );
+
+    return UserCoursesModel;
+  }
+
+  static associate(models: SqlModelsType) {
+    UserCoursesModel.belongsTo(models.CoursesModel, {
+      // Use correct model name
+      foreignKey: 'courseId', // Correct foreign key
+      as: 'course',
+    });
+  }
+}
+
 export class SubjectModel extends Model<
   InferAttributes<SubjectModel>,
   InferCreationAttributes<SubjectModel>

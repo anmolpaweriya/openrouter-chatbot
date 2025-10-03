@@ -10,9 +10,10 @@ import {
   ValidationPipe,
   UsePipes,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
-import { EducationService } from './courses.services';
+import { CourseService } from './courses.services';
 import {
   CreateCourseDto,
   UpdateCourseDto,
@@ -21,14 +22,15 @@ import {
   CreateTimetableDto,
   UpdateTimetableDto,
   IdQueryDto,
+  JoinCourseDto,
 } from './courses.dto';
 import { UserGuard } from 'src/core/guards/guards';
+import { RequestDto } from 'src/core/dtos/request.dto';
 
 @ApiTags('education')
-@UseGuards(UserGuard)
 @Controller('education')
 export class EducationController {
-  constructor(private readonly educationService: EducationService) {}
+  constructor(private readonly educationService: CourseService) {}
 
   // ----- Course -----
   @Post('courses')
@@ -36,6 +38,19 @@ export class EducationController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   createCourse(@Body() body: CreateCourseDto) {
     return this.educationService.createCourse(body);
+  }
+
+  @Get('course/joined')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  @UseGuards(UserGuard)
+  getStudentCourse(@Req() req: RequestDto) {
+    return this.educationService.getUserCourse(req.userId);
+  }
+  @Post('course/join')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  @UseGuards(UserGuard)
+  joinCourse(@Body() body: JoinCourseDto, @Req() req: RequestDto) {
+    return this.educationService.joinCourse(req.userId, body.courseId);
   }
 
   @Get('courses')

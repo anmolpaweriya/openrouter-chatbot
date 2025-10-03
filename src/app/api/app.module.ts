@@ -8,6 +8,7 @@ import { LoggerModule } from 'src/core/services/logger/logger.module';
 import { HttpExceptionFilter } from 'src/core/filters/http-exception.filter';
 import { ChatModule } from 'src/modules/chatbot/chat.module';
 import { CoursesModule } from 'src/modules/courses/courses.module';
+import { FacultyModule } from 'src/modules/faculty/faculty.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CoursesModule } from 'src/modules/courses/courses.module';
     // modules
     ChatModule,
     CoursesModule,
+    FacultyModule,
   ],
   providers: [
     {

@@ -6,6 +6,7 @@ import {
   CourseModel,
   SubjectModel,
   TimetableModel,
+  UserCoursesModel,
 } from 'src/modules/courses/courses.schema';
 import { FacultyModel } from 'src/modules/faculty/faculty.schema';
 
@@ -18,4 +19,5 @@ export const SQL_MODELS = {
   SubjectModel: SubjectModel.setup,
   TimetableModel: TimetableModel.setup,
   FacultyModel: FacultyModel.setup,
+  UserCoursesModel: UserCoursesModel.setup,
 };

@@ -17,7 +17,8 @@ export class FacultyService {
   }
 
   async findAll() {
-    return this.FacultyModel.findAll();
+    const faculties = await this.FacultyModel.findAll();
+    return faculties.map((val) => val.toJSON());
   }
 
   async findById(id: string) {

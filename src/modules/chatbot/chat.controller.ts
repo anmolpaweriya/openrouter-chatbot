@@ -17,7 +17,6 @@ import { ChatIdDto, ChatRequestDto, CreateChatSessionDto } from './chat.dto';
 import { RequestDto } from 'src/core/dtos/request.dto';
 import { UserGuard } from 'src/core/guards/guards';
 
-@UseGuards(UserGuard)
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
@@ -28,6 +27,7 @@ export class ChatController {
   }
 
   @Post('new-chat')
+  @UseGuards(UserGuard)
   async createChatRoom(
     @Body() body: CreateChatSessionDto,
     @Req() req: RequestDto,
@@ -41,6 +41,7 @@ export class ChatController {
   }
 
   @Get('/rooms')
+  @UseGuards(UserGuard)
   async getChatHistory(@Req() res: RequestDto) {
     return await this.chatService.getChatHistory(res.userId);
   }

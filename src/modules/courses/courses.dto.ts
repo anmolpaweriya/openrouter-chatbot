@@ -4,6 +4,12 @@ import { IsString, IsEnum, IsOptional, IsInt, Min } from 'class-validator';
 import { Weekday } from './courses.schema';
 import { Max } from 'sequelize-typescript';
 
+export class JoinCourseDto {
+  @IsString()
+  @ApiProperty({ example: 'uuid-1234-5678' })
+  courseId: string;
+}
+
 export class CreateCourseDto {
   @IsString()
   @ApiProperty({ example: 'Computer Science' })
