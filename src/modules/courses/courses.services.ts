@@ -92,8 +92,11 @@ export class CourseService {
     return subject.dataValues;
   }
 
-  async getSubjects() {
+  async getSubjects(courseId?: string) {
+    const whereClause = courseId ? { courseId } : undefined;
+
     return await this.subjectModel.findAll({
+      where: whereClause,
       include: [
         {
           association: 'timetables',

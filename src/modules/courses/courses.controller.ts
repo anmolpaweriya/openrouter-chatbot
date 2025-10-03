@@ -90,8 +90,8 @@ export class EducationController {
   }
 
   @Get('subjects')
-  getSubjects() {
-    return this.educationService.getSubjects();
+  getSubjects(@Query('courseId') courseId?: string) {
+    return this.educationService.getSubjects(courseId);
   }
 
   @Get('subject')
