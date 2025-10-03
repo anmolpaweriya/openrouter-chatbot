@@ -17,6 +17,9 @@ async function bootstrap() {
       forbidUnknownValues: false,
     }),
   );
+
+  app.enableCors();
+
   app.useGlobalInterceptors(new LoggerInterceptor(loggerService));
   const config = new DocumentBuilder()
     .setTitle('Db service')

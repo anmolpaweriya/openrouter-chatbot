@@ -15,7 +15,45 @@ export class ChatRequestDto {
     example: 'user-12345-session',
     required: false,
   })
+  @IsString()
+  chatId: string;
+}
+
+export class CreateChatSessionDto {
+  @ApiProperty({
+    description: 'Optional title for the chat session',
+    example: 'My First Chat Session',
+    required: false,
+  })
   @IsOptional()
   @IsString()
-  sessionId?: string;
+  title?: string;
+
+  @ApiProperty({
+    description: 'Optional session ID to maintain context',
+    example: 'user-12345-session',
+    required: false,
+  })
+  @IsString()
+  userId: string;
+}
+
+export class ChatIdDto {
+  @ApiProperty({
+    description: 'The chat session ID to fetch history for',
+    example: 'chat-12345-session',
+  })
+  @IsNotEmpty()
+  @IsString()
+  chatId: string;
+}
+
+export class UserIdDto {
+  @ApiProperty({
+    description: 'The chat session ID to fetch history for',
+    example: 'chat-12345-session',
+  })
+  @IsNotEmpty()
+  @IsString()
+  userId: string;
 }
