@@ -24,3 +24,21 @@ export class InternalCallGuard implements CanActivate {
     return true;
   }
 }
+
+@Injectable()
+export class UserGuard implements CanActivate {
+  constructor() {}
+
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const userId = request.headers['x-user-id'];
+
+    if (!userId) throw new UnauthorizedException('User ID is required');
+
+    request.userId = userId;
+
+    return true;
+  }
+}

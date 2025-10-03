@@ -28,14 +28,6 @@ export class CreateChatSessionDto {
   @IsOptional()
   @IsString()
   title?: string;
-
-  @ApiProperty({
-    description: 'Optional session ID to maintain context',
-    example: 'user-12345-session',
-    required: false,
-  })
-  @IsString()
-  userId: string;
 }
 
 export class ChatIdDto {

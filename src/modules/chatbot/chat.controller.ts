@@ -7,6 +7,8 @@ import {
   HttpStatus,
   Get,
   Query,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import {
@@ -15,6 +17,7 @@ import {
   CreateChatSessionDto,
   UserIdDto,
 } from './chat.dto';
+import { RequestDto } from 'src/core/dtos/request.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -26,8 +29,11 @@ export class ChatController {
   }
 
   @Post('new-chat')
-  async createChatRoom(@Body() body: CreateChatSessionDto) {
-    return await this.chatService.createChatSession(body);
+  async createChatRoom(
+    @Body() body: CreateChatSessionDto,
+    @Req() req: RequestDto,
+  ) {
+    return await this.chatService.createChatSession(body, req.userId);
   }
 
   @Get('/messages')
@@ -36,7 +42,7 @@ export class ChatController {
   }
 
   @Get('/rooms')
-  async getChatHistory(@Query() query: UserIdDto) {
-    return await this.chatService.getChatHistory(query.userId);
+  async getChatHistory(@Req() res: RequestDto) {
+    return await this.chatService.getChatHistory(res.userId);
   }
 }

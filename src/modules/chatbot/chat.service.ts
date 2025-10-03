@@ -62,10 +62,10 @@ export class ChatService {
     });
   }
 
-  async createChatSession(data: CreateChatSessionDto) {
+  async createChatSession(data: CreateChatSessionDto, userId: string) {
     const res = this.ChatHistoryModel.create({
       title: data.title || 'New Chat',
-      userId: data.userId,
+      userId,
     });
 
     return res;
