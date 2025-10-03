@@ -61,6 +61,13 @@ export class SingleTimetableDto {
   @IsString()
   @IsNotEmpty()
   endTime: string;
+
+  @ApiProperty({
+    example: '304 building 24',
+    description: 'room details',
+  })
+  @IsString()
+  room: string;
 }
 
 export class CompleteTimetableDto {

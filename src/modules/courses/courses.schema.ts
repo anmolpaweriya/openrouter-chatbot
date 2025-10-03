@@ -187,6 +187,7 @@ export class TimetableModel extends Model<
   declare day: Weekday;
   declare startTime: string; // Plain string like '09:00'
   declare endTime: string; // Plain string like '10:30'
+  declare room: CreationOptional<string | null>;
 
   static setup(sequelize: Sequelize) {
     TimetableModel.init(
@@ -215,6 +216,10 @@ export class TimetableModel extends Model<
         endTime: {
           type: DataTypes.STRING,
           allowNull: false,
+        },
+        room: {
+          type: DataTypes.STRING,
+          allowNull: true,
         },
       },
       {

@@ -1,3 +1,4 @@
+import { BuildingModel } from 'src/modules/building/building.schema';
 import {
   ChatHistoryModel,
   ChatMessageModel,
@@ -20,4 +21,5 @@ export const SQL_MODELS = {
   TimetableModel: TimetableModel.setup,
   FacultyModel: FacultyModel.setup,
   UserCoursesModel: UserCoursesModel.setup,
+  BuildingModel: BuildingModel.setup,
 };
