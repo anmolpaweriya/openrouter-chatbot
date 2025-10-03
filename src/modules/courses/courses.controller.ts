@@ -23,6 +23,7 @@ import {
   UpdateTimetableDto,
   IdQueryDto,
   JoinCourseDto,
+  CreateCompleteTimetableDto,
 } from './courses.dto';
 import { UserGuard } from 'src/core/guards/guards';
 import { RequestDto } from 'src/core/dtos/request.dto';
@@ -113,6 +114,12 @@ export class EducationController {
   }
 
   // ----- Timetable -----
+  @Post('complete-timetable')
+  async setCompleteTimetableForSubject(
+    @Body() data: CreateCompleteTimetableDto,
+  ) {
+    return this.educationService.setCompleteTimetableForSubject(data);
+  }
   @Post('timetables')
   @ApiBody({ type: CreateTimetableDto })
   createTimetable(@Body() body: CreateTimetableDto) {

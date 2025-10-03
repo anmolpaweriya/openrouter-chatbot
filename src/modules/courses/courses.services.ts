@@ -12,6 +12,7 @@ import {
   UserCoursesModel,
 } from 'src/modules/courses/courses.schema';
 import {
+  CreateCompleteTimetableDto,
   CreateCourseDto,
   CreateSubjectDto,
   CreateTimetableDto,
@@ -87,7 +88,13 @@ export class CourseService {
   }
 
   async getSubjects() {
-    return this.subjectModel.findAll();
+    return await this.subjectModel.findAll({
+      include: [
+        {
+          association: 'timetables',
+        },
+      ],
+    });
   }
 
   async getSubject(id: string) {
@@ -110,7 +117,25 @@ export class CourseService {
   // --- Timetable ---
   //
 
-  async setCompleteTimetableForSubject(subjectId: string) {}
+  async setCompleteTimetableForSubject(data: CreateCompleteTimetableDto) {
+    await this.timetableModel.destroy({ where: { subjectId: data.subjectId } });
+
+    //TODO
+    const subject = await this.getSubject(data.subjectId);
+    const created = await Promise.all(
+      data?.timetables?.map((t) =>
+        this.timetableModel.create({
+          courseId: subject.dataValues.courseId,
+          subjectId: data.subjectId,
+          day: t.day,
+          startTime: t.startTime,
+          endTime: t.endTime,
+        }),
+      ),
+    );
+
+    return created;
+  }
   async createTimetable(data: CreateTimetableDto) {
     return this.timetableModel.create(data);
   }

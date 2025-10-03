@@ -1,8 +1,18 @@
 // src/dtos/education.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsEnum, IsOptional, IsInt, Min } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsOptional,
+  IsInt,
+  Min,
+  IsNotEmpty,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
 import { Weekday } from './courses.schema';
 import { Max } from 'sequelize-typescript';
+import { Type } from 'class-transformer';
 
 export class JoinCourseDto {
   @IsString()
@@ -112,4 +122,61 @@ export class IdQueryDto {
   @IsString()
   @ApiProperty({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' })
   id: string;
+}
+
+export class SingleTimetableDto {
+  @ApiProperty({
+    enum: Weekday,
+    example: Weekday.Monday,
+    description: 'Day of the week for the class',
+  })
+  @IsEnum(Weekday)
+  day: Weekday;
+
+  @ApiProperty({
+    example: '09:00',
+    description: 'Start time of the class (HH:mm)',
+  })
+  @IsString()
+  @IsNotEmpty()
+  startTime: string;
+
+  @ApiProperty({
+    example: '10:30',
+    description: 'End time of the class (HH:mm)',
+  })
+  @IsString()
+  @IsNotEmpty()
+  endTime: string;
+}
+
+export class CreateCompleteTimetableDto {
+  @ApiProperty({
+    example: 'subject-uuid',
+    description: 'UUID of the subject',
+  })
+  @IsString()
+  @IsNotEmpty()
+  subjectId: string;
+
+  @ApiProperty({
+    type: [SingleTimetableDto],
+    description: 'List of timetable entries for the subject',
+    example: [
+      {
+        day: 'Monday',
+        startTime: '09:00',
+        endTime: '10:30',
+      },
+      {
+        day: 'Wednesday',
+        startTime: '11:00',
+        endTime: '12:30',
+      },
+    ],
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SingleTimetableDto)
+  timetables: SingleTimetableDto[];
 }

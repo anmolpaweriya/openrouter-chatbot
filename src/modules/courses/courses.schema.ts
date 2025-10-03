@@ -155,6 +155,11 @@ export class SubjectModel extends Model<
       foreignKey: 'teacherId', // Correct foreign key
       as: 'teacher',
     });
+
+    SubjectModel.hasMany(models.TimetableModel, {
+      foreignKey: 'subjectId',
+      as: 'timetables', // 👈 this will be the field in the returned object
+    });
   }
 }
 

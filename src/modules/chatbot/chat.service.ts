@@ -47,6 +47,12 @@ export class ChatService {
       content: `these are my universities faculties : ${JSON.stringify(faculties)}`,
     });
 
+    const subjects = await this.courseService.getSubjects();
+    data.push({
+      role: 'system',
+      content: `these are my universities subjects with their timetable : ${JSON.stringify(subjects)}`,
+    });
+
     return data;
   }
 
