@@ -19,6 +19,7 @@ export class CourseModel extends Model<
 > {
   declare id: CreationOptional<string>;
   declare name: string;
+  declare code: string;
   declare readonly createdAt?: Date;
   declare readonly updatedAt?: Date;
 
@@ -29,6 +30,10 @@ export class CourseModel extends Model<
           type: DataTypes.UUID,
           defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
+        },
+        code: {
+          type: DataTypes.STRING,
+          allowNull: false,
         },
         name: {
           type: DataTypes.STRING,

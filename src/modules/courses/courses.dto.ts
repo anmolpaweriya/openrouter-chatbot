@@ -6,6 +6,10 @@ export class CreateCourseDto {
   @IsString()
   @ApiProperty({ example: 'Computer Science' })
   name: string;
+
+  @IsString()
+  @ApiProperty({ example: 'CAP455' })
+  code: string;
 }
 
 export class UpdateCourseDto {
