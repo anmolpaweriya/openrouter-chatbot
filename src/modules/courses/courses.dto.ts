@@ -37,7 +37,56 @@ export class UpdateCourseDto {
   name?: string;
 }
 
-export class CreateSubjectDto {
+export class SingleTimetableDto {
+  @ApiProperty({
+    enum: Weekday,
+    example: Weekday.Monday,
+    description: 'Day of the week for the class',
+  })
+  @IsEnum(Weekday)
+  day: Weekday;
+
+  @ApiProperty({
+    example: '09:00',
+    description: 'Start time of the class (HH:mm)',
+  })
+  @IsString()
+  @IsNotEmpty()
+  startTime: string;
+
+  @ApiProperty({
+    example: '10:30',
+    description: 'End time of the class (HH:mm)',
+  })
+  @IsString()
+  @IsNotEmpty()
+  endTime: string;
+}
+
+export class CompleteTimetableDto {
+  @ApiProperty({
+    type: [SingleTimetableDto],
+    description: 'List of timetable entries for the subject',
+    example: [
+      {
+        day: 'Monday',
+        startTime: '09:00',
+        endTime: '10:30',
+      },
+      {
+        day: 'Wednesday',
+        startTime: '11:00',
+        endTime: '12:30',
+      },
+    ],
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SingleTimetableDto)
+  timetables: SingleTimetableDto[];
+}
+
+export class CreateSubjectDto extends CompleteTimetableDto {
   @IsString()
   @ApiProperty({ example: 'Data Structures' })
   name: string;
@@ -51,16 +100,11 @@ export class CreateSubjectDto {
   teacherId: string;
 }
 
-export class UpdateSubjectDto {
+export class UpdateSubjectDto extends CompleteTimetableDto {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({ example: 'Algorithms' })
   name?: string;
-
-  @IsOptional()
-  @IsString()
-  @ApiPropertyOptional({ example: '3fa85f64-5717-4562-b3fc-2c963f66afa6' })
-  courseId?: string;
 }
 
 export class CreateTimetableDto {
@@ -124,33 +168,7 @@ export class IdQueryDto {
   id: string;
 }
 
-export class SingleTimetableDto {
-  @ApiProperty({
-    enum: Weekday,
-    example: Weekday.Monday,
-    description: 'Day of the week for the class',
-  })
-  @IsEnum(Weekday)
-  day: Weekday;
-
-  @ApiProperty({
-    example: '09:00',
-    description: 'Start time of the class (HH:mm)',
-  })
-  @IsString()
-  @IsNotEmpty()
-  startTime: string;
-
-  @ApiProperty({
-    example: '10:30',
-    description: 'End time of the class (HH:mm)',
-  })
-  @IsString()
-  @IsNotEmpty()
-  endTime: string;
-}
-
-export class CreateCompleteTimetableDto {
+export class CreateCompleteTimetableDto extends CompleteTimetableDto {
   @ApiProperty({
     example: 'subject-uuid',
     description: 'UUID of the subject',
@@ -158,25 +176,4 @@ export class CreateCompleteTimetableDto {
   @IsString()
   @IsNotEmpty()
   subjectId: string;
-
-  @ApiProperty({
-    type: [SingleTimetableDto],
-    description: 'List of timetable entries for the subject',
-    example: [
-      {
-        day: 'Monday',
-        startTime: '09:00',
-        endTime: '10:30',
-      },
-      {
-        day: 'Wednesday',
-        startTime: '11:00',
-        endTime: '12:30',
-      },
-    ],
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SingleTimetableDto)
-  timetables: SingleTimetableDto[];
 }

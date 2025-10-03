@@ -84,7 +84,12 @@ export class CourseService {
 
   // --- Subject ---
   async createSubject(data: CreateSubjectDto) {
-    return this.subjectModel.create(data);
+    const subject = await this.subjectModel.create(data);
+    await this.setCompleteTimetableForSubject({
+      subjectId: subject.dataValues.id,
+      timetables: data.timetables,
+    });
+    return subject.dataValues;
   }
 
   async getSubjects() {
