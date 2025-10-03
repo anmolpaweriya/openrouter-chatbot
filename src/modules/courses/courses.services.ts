@@ -111,6 +111,10 @@ export class CourseService {
 
   async updateSubject(id: string, data: UpdateSubjectDto) {
     const subject = await this.getSubject(id);
+    await this.setCompleteTimetableForSubject({
+      subjectId: id,
+      timetables: data.timetables,
+    });
     return subject.update(data);
   }
 
@@ -135,6 +139,7 @@ export class CourseService {
           day: t.day,
           startTime: t.startTime,
           endTime: t.endTime,
+          room: t.room,
         }),
       ),
     );

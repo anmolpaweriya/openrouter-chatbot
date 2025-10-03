@@ -7,6 +7,7 @@ import { CreateChatSessionDto } from './chat.dto';
 import { ASSISTANCE_GREETING, INITIAL_MODEL_DATA } from './chat.constants';
 import { CourseService } from '../courses/courses.services';
 import { FacultyService } from '../faculty/faculty.services';
+import { BuildingService } from '../building/building.service';
 
 @Injectable()
 export class ChatService {
@@ -19,6 +20,7 @@ export class ChatService {
     private readonly dbService: DbService,
     private readonly courseService: CourseService,
     private readonly facultyService: FacultyService,
+    private readonly buildingService: BuildingService,
   ) {
     this.ChatMessageModel = this.dbService.sqlService.ChatMessageModel;
     this.ChatHistoryModel = this.dbService.sqlService.ChatHistoryModel;
@@ -51,6 +53,12 @@ export class ChatService {
     data.push({
       role: 'system',
       content: `these are my universities subjects with their timetable : ${JSON.stringify(subjects)}`,
+    });
+
+    const buildings = await this.buildingService.getAllBuildings();
+    data.push({
+      role: 'system',
+      content: `these are my universities buildings with their locations : ${JSON.stringify(buildings)} \n\n when i ask for location then give me the google map link with these coordinates. for example i ask for my class location and room matches with the building then give the that perticular building location`,
     });
 
     return data;

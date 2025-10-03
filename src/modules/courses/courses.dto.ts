@@ -79,11 +79,13 @@ export class CompleteTimetableDto {
         day: 'Monday',
         startTime: '09:00',
         endTime: '10:30',
+        room: '38 - 605C',
       },
       {
         day: 'Wednesday',
         startTime: '11:00',
         endTime: '12:30',
+        room: '38 - 605C',
       },
     ],
   })
