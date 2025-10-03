@@ -4,6 +4,7 @@ import axios from 'axios';
 import { DbService } from 'src/core/services/db-service/db.service';
 import { ChatHistoryModel, ChatMessageModel } from './chat.schema';
 import { CreateChatSessionDto } from './chat.dto';
+import { ASSISTANCE_GREETING } from './chat.constants';
 
 @Injectable()
 export class ChatService {
@@ -63,14 +64,18 @@ export class ChatService {
   }
 
   async createChatSession(data: CreateChatSessionDto, userId: string) {
-    const res = this.ChatHistoryModel.create({
+    const res = await this.ChatHistoryModel.create({
       title: data.title || 'New Chat',
       userId,
     });
 
-    return res;
+    await this.ChatMessageModel.create({
+      chatId: res.dataValues.id,
+      role: 'assistant',
+      content: ASSISTANCE_GREETING,
+    });
 
-    // await this.handleMessage(CHATNBOT_GREETING_MESSAGE,res.id)
+    return res.dataValues;
   }
 
   async getChatMessages(chatId: string) {
