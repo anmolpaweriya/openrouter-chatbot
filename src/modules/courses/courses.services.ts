@@ -105,6 +105,11 @@ export class CourseService {
         {
           association: 'timetables',
         },
+        {
+          model: this.facultyModel,
+          as: 'teacher',
+          attributes: ['id', 'name', 'email', 'designation'],
+        },
       ],
     });
   }
