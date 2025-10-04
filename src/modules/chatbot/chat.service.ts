@@ -9,6 +9,7 @@ import { CourseService } from '../courses/courses.services';
 import { FacultyService } from '../faculty/faculty.services';
 import { BuildingService } from '../building/building.service';
 import * as pdfParse from 'pdf-parse';
+import { EventService } from '../events/events.services';
 
 @Injectable()
 export class ChatService {
@@ -22,6 +23,7 @@ export class ChatService {
     private readonly courseService: CourseService,
     private readonly facultyService: FacultyService,
     private readonly buildingService: BuildingService,
+    private readonly eventService: EventService,
   ) {
     this.ChatMessageModel = this.dbService.sqlService.ChatMessageModel;
     this.ChatHistoryModel = this.dbService.sqlService.ChatHistoryModel;
@@ -60,6 +62,12 @@ export class ChatService {
     data.push({
       role: 'system',
       content: `these are my universities buildings with their locations : ${JSON.stringify(buildings)} \n\n when i ask for location then give me the google map link with these coordinates. for example i ask for my class location and room matches with the building then give the that perticular building location`,
+    });
+
+    const events = await this.eventService.getEvents();
+    data.push({
+      role: 'system',
+      content: `these are the university events details : ${JSON.stringify(events)}`,
     });
 
     return data;
