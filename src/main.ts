@@ -22,7 +22,7 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new LoggerInterceptor(loggerService));
   const config = new DocumentBuilder()
-    .setTitle('Db service')
+    .setTitle('Campus GPT backend')
     .setDescription('The API description')
     .setVersion('1.0')
     .build();
