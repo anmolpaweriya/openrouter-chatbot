@@ -8,10 +8,10 @@ export class FileUploadDto {
     description: 'Image file to be uploaded',
     example: 'image/jpeg',
   })
-  file?: File;
+  file?: Express.Multer.File;
 }
 
-export class ChatRequestDto {
+export class ChatRequestDto extends FileUploadDto {
   @ApiProperty({
     description: 'The message from the user',
     example: 'Hello! How are you?',

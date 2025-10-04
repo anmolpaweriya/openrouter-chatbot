@@ -31,11 +31,17 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Post('/message')
-  // @UseInterceptors(FileInterceptor('file'))
-  // @ApiConsumes('multipart/form-data')
-  async chat(@Body() body: ChatRequestDto) {
-    // console.log(file);
-    return await this.chatService.handleMessage(body.message, body.chatId);
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  async chat(
+    @Body() body: ChatRequestDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return await this.chatService.handleMessage(
+      body.message,
+      body.chatId,
+      file,
+    );
   }
 
   @Post('new-chat')
