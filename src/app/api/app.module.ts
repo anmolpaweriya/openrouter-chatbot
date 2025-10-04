@@ -10,6 +10,7 @@ import { ChatModule } from 'src/modules/chatbot/chat.module';
 import { CoursesModule } from 'src/modules/courses/courses.module';
 import { FacultyModule } from 'src/modules/faculty/faculty.module';
 import { BuildingModule } from 'src/modules/building/building.module';
+import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BuildingModule } from 'src/modules/building/building.module';
     CoursesModule,
     FacultyModule,
     BuildingModule,
+    DashboardModule,
   ],
   providers: [
     {
