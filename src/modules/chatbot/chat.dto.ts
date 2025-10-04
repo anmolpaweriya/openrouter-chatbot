@@ -1,7 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class ChatRequestDto {
+export class FileUploadDto {
+  @ApiPropertyOptional({
+    type: 'string',
+    format: 'binary',
+    description: 'Image file to be uploaded',
+    example: 'image/jpeg',
+  })
+  file?: Express.Multer.File;
+}
+
+export class ChatRequestDto extends FileUploadDto {
   @ApiProperty({
     description: 'The message from the user',
     example: 'Hello! How are you?',
@@ -12,8 +22,8 @@ export class ChatRequestDto {
 
   @ApiProperty({
     description: 'Optional session ID to maintain context',
-    example: 'user-12345-session',
-    required: false,
+    example: 'a2af34d5-327b-4050-9977-9452c3205884',
+    required: true,
   })
   @IsString()
   chatId: string;

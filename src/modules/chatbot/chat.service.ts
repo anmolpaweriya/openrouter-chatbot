@@ -8,6 +8,7 @@ import { ASSISTANCE_GREETING, INITIAL_MODEL_DATA } from './chat.constants';
 import { CourseService } from '../courses/courses.services';
 import { FacultyService } from '../faculty/faculty.services';
 import { BuildingService } from '../building/building.service';
+import * as pdfParse from 'pdf-parse';
 
 @Injectable()
 export class ChatService {
@@ -70,13 +71,26 @@ export class ChatService {
     return room?.dataValues;
   }
 
-  async handleMessage(userMessage: string, chatId: string) {
+  async handleMessage(
+    userMessage: string,
+    chatId: string,
+    file?: Express.Multer.File,
+  ) {
     const room = await this.getChatRoomById(chatId);
     await this.ChatMessageModel.create({
       chatId,
       role: 'user',
       content: userMessage,
     });
+
+    if (file) {
+      const pdfData = await pdfParse(file.buffer);
+      await this.ChatMessageModel.create({
+        chatId,
+        role: 'system',
+        content: `The user uploaded a PDF file. Content:\n\n${pdfData?.text ?? ''}`,
+      });
+    }
 
     const history = await this.ChatMessageModel.findAll({
       where: { chatId },
