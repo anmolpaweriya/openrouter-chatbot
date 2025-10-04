@@ -10,6 +10,7 @@ import {
   SubjectModel,
   TimetableModel,
   UserCoursesModel,
+  Weekday,
 } from 'src/modules/courses/courses.schema';
 import {
   CreateCompleteTimetableDto,
@@ -21,6 +22,7 @@ import {
   UpdateTimetableDto,
 } from './courses.dto';
 import { DbService } from 'src/core/services/db-service/db.service';
+import { FacultyModel } from '../faculty/faculty.schema';
 
 @Injectable()
 export class CourseService {
@@ -28,12 +30,14 @@ export class CourseService {
   private readonly subjectModel: typeof SubjectModel;
   private readonly timetableModel: typeof TimetableModel;
   private readonly userCoursesModel: typeof UserCoursesModel;
+  private readonly facultyModel: typeof FacultyModel;
 
   constructor(private readonly dbService: DbService) {
     this.courseModel = this.dbService.sqlService.CoursesModel;
     this.subjectModel = this.dbService.sqlService.SubjectModel;
     this.timetableModel = this.dbService.sqlService.TimetableModel;
     this.userCoursesModel = this.dbService.sqlService.UserCoursesModel;
+    this.facultyModel = this.dbService.sqlService.FacultyModel;
   }
 
   // --- Course ---
@@ -172,5 +176,65 @@ export class CourseService {
   async deleteTimetable(id: string) {
     const timetable = await this.getTimetable(id);
     await timetable.destroy();
+  }
+
+  async getCourseTimetable(userId: string) {
+    const course = await this.getUserCourse(userId);
+
+    const timetables: any = await this.timetableModel.findAll({
+      where: { courseId: course?.id },
+      include: [
+        {
+          model: SubjectModel,
+          as: 'subject',
+          attributes: ['id', 'name', 'teacherId'],
+          include: [
+            {
+              model: this.facultyModel, // << This should be FacultyModel
+              as: 'teacher',
+              attributes: ['id', 'name', 'email', 'designation'],
+            },
+          ],
+        },
+      ],
+      order: [
+        ['day', 'ASC'],
+        ['startTime', 'ASC'],
+      ],
+    });
+
+    // Group by day
+    const grouped: Record<Weekday, any[]> = {
+      Monday: [],
+      Tuesday: [],
+      Wednesday: [],
+      Thursday: [],
+      Friday: [],
+      Saturday: [],
+      Sunday: [],
+    };
+
+    for (const entry of timetables) {
+      grouped[entry.day].push({
+        subject: {
+          id: entry.subject?.id,
+          name: entry.subject?.name,
+        },
+        faculty: entry.subject?.teacher
+          ? {
+              id: entry.subject.teacher.id,
+              name: entry.subject.teacher.name,
+              email: entry.subject.teacher.email,
+              designation: entry.subject.teacher.designation,
+            }
+          : null,
+        course,
+        startTime: entry.startTime,
+        endTime: entry.endTime,
+        room: entry.room,
+      });
+    }
+
+    return grouped;
   }
 }

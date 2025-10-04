@@ -152,4 +152,10 @@ export class EducationController {
   deleteTimetable(@Query() query: IdQueryDto) {
     return this.educationService.deleteTimetable(query.id);
   }
+
+  @Get('course-timetable')
+  @UseGuards(UserGuard)
+  async getCourseTimetable(@Req() req: RequestDto) {
+    return await this.educationService.getCourseTimetable(req.userId);
+  }
 }
