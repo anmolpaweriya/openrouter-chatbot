@@ -4,16 +4,16 @@ import { RequestDto } from 'src/core/dtos/request.dto';
 import { UserGuard } from 'src/core/guards/guards';
 
 @Controller('dashboard')
-@UseGuards(UserGuard)
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get('admin')
-  async getAdminDashboardData(@Req() req: RequestDto) {
-    return this.dashboardService.getAdminDashboardData(req.userId);
+  async getAdminDashboardData() {
+    return this.dashboardService.getAdminDashboardData();
   }
 
   @Get('student')
+  @UseGuards(UserGuard)
   async getStudentDashboardData(@Req() req: RequestDto) {
     return this.dashboardService.getStudentDashboardData(req.userId);
   }

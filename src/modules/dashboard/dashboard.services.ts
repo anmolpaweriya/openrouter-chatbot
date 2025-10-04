@@ -9,6 +9,9 @@ import {
 import { DbService } from 'src/core/services/db-service/db.service';
 
 import * as dayjs from 'dayjs'; // Optional: for better day handling
+import { FacultyModel } from '../faculty/faculty.schema';
+import { BuildingModel } from '../building/building.schema';
+import { col, fn } from 'sequelize';
 
 @Injectable()
 export class DashboardService {
@@ -16,16 +19,62 @@ export class DashboardService {
   private readonly SubjectModel: typeof SubjectModel;
   private readonly UserCoursesModel: typeof UserCoursesModel;
   private readonly TimetableModel: typeof TimetableModel;
+  private readonly FacultyModel: typeof FacultyModel;
+  private readonly BuildingModel: typeof BuildingModel;
 
   constructor(private readonly dbService: DbService) {
     this.CourseModel = this.dbService.sqlService.CoursesModel;
     this.SubjectModel = this.dbService.sqlService.SubjectModel;
     this.UserCoursesModel = this.dbService.sqlService.UserCoursesModel;
     this.TimetableModel = this.dbService.sqlService.TimetableModel;
+    this.FacultyModel = this.dbService.sqlService.FacultyModel;
+    this.BuildingModel = this.dbService.sqlService.BuildingModel;
   }
 
-  async getAdminDashboardData(userId: string) {
-    return 'hello';
+  async getAdminDashboardData() {
+    const totalStudents = await this.UserCoursesModel.count();
+    const totalFaculty = await this.FacultyModel.count();
+    const totalCourses = await this.CourseModel.count();
+    const totalBuildings = await this.BuildingModel.count();
+
+    const departmentOverview = await CourseModel.findAll({
+      attributes: [
+        'id',
+        'name',
+        'code',
+        [fn('COUNT', col('userCourses.id')), 'studentCount'],
+      ],
+      include: [
+        {
+          model: this.UserCoursesModel,
+          as: 'userCourses',
+          attributes: [], // don't include UserCourses fields in the result
+          required: false, // left join to include courses with 0 students
+        },
+      ],
+      group: ['CourseModel.id'],
+    });
+
+    const recentEnrollments = await this.UserCoursesModel.findAll({
+      limit: 5,
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: this.CourseModel,
+          as: 'course',
+          attributes: ['id', 'name', 'code'],
+        },
+      ],
+    });
+
+    return {
+      totalBuildings,
+      totalCourses,
+      totalFaculty,
+      totalStudents,
+      departmentOverview,
+      recentEnrollments,
+    };
   }
 
   async getStudentDashboardData(userId: string) {

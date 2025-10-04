@@ -9,6 +9,7 @@ import {
   TimetableModel,
   UserCoursesModel,
 } from 'src/modules/courses/courses.schema';
+import { EventModel } from 'src/modules/events/events.schema';
 import { FacultyModel } from 'src/modules/faculty/faculty.schema';
 
 export const MONGOOSE_MODELS = {};
@@ -22,4 +23,5 @@ export const SQL_MODELS = {
   FacultyModel: FacultyModel.setup,
   UserCoursesModel: UserCoursesModel.setup,
   BuildingModel: BuildingModel.setup,
+  EventModel: EventModel.setup,
 };

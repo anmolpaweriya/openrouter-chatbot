@@ -11,6 +11,7 @@ import { CoursesModule } from 'src/modules/courses/courses.module';
 import { FacultyModule } from 'src/modules/faculty/faculty.module';
 import { BuildingModule } from 'src/modules/building/building.module';
 import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
+import { EventModule } from 'src/modules/events/events.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { DashboardModule } from 'src/modules/dashboard/dashboard.module';
     FacultyModule,
     BuildingModule,
     DashboardModule,
+    EventModule,
   ],
   providers: [
     {

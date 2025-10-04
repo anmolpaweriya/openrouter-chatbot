@@ -51,6 +51,12 @@ export class CourseModel extends Model<
 
     return CourseModel;
   }
+  static associate(models: SqlModelsType) {
+    CourseModel.hasMany(models.UserCoursesModel, {
+      foreignKey: 'courseId',
+      as: 'userCourses',
+    });
+  }
 }
 
 export class UserCoursesModel extends Model<
