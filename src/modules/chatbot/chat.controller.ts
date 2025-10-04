@@ -11,18 +11,30 @@ import {
   Req,
   UseGuards,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { ChatIdDto, ChatRequestDto, CreateChatSessionDto } from './chat.dto';
+import {
+  ChatIdDto,
+  ChatRequestDto,
+  CreateChatSessionDto,
+  FileUploadDto,
+} from './chat.dto';
 import { RequestDto } from 'src/core/dtos/request.dto';
 import { UserGuard } from 'src/core/guards/guards';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Post('/message')
+  // @UseInterceptors(FileInterceptor('file'))
+  // @ApiConsumes('multipart/form-data')
   async chat(@Body() body: ChatRequestDto) {
+    // console.log(file);
     return await this.chatService.handleMessage(body.message, body.chatId);
   }
 
